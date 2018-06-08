@@ -1,0 +1,24 @@
+const { createStore } = require('redux');
+const ticketReducer = require('./reducers/ticket');
+
+const store = createStore(ticketReducer);
+
+exports.observeStore = function(store, select, onChange) {
+  let currentState;
+
+  function handleChange() {
+    let nextState = select(store.getState());
+    if (nextState !== currentState) {
+      currentState = nextState;
+      onChange(currentState);
+    }
+  }
+
+  let unsubscribe = store.subscribe(handleChange);
+  handleChange();
+  return unsubscribe;
+}
+
+
+
+exports.store = store;
